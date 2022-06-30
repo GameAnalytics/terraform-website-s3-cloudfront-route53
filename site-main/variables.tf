@@ -146,3 +146,9 @@ variable "error_document" {
   description = "An absolute path to the document to return in case of a 4XX error."
   default     = "404.html"
 }
+
+variable "web_acl_id" {
+  type        = string
+  description = "An AWS WAF web ACL to use with the Cloudfront distribution"
+  default     = null
+}
