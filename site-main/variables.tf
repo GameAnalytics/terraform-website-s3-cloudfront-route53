@@ -152,3 +152,9 @@ variable "web_acl_id" {
   description = "An AWS WAF web ACL to use with the Cloudfront distribution"
   default     = null
 }
+
+variable "response_headers_policy_id" {
+  type        = string
+  description = "A response headers policy to associate with the default cache behavior"
+  default     = null
+}

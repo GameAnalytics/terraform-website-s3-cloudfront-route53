@@ -148,6 +148,8 @@ resource "aws_cloudfront_distribution" "website_cdn" {
     viewer_protocol_policy = "redirect-to-https"
     compress               = true
 
+    response_headers_policy_id = var.response_headers_policy_id
+
     dynamic "lambda_function_association" {
       for_each = [for lfa in var.default_cache_behavior_lambda_function_associations : {
         event_type   = lfa.event_type
@@ -210,17 +212,18 @@ resource "aws_cloudfront_distribution" "website_cdn" {
 
   dynamic "ordered_cache_behavior" {
     for_each = [for b in var.ordered_cache_behaviors : {
-      min_ttl              = b.min_ttl
-      default_ttl          = b.default_ttl
-      max_ttl              = b.max_ttl
-      path_pattern         = b.path_pattern
-      target_origin_id     = b.target_origin_id
-      headers              = b.forwarded_values_headers
-      forward              = b.cookies_forward
-      event_type           = b.event_type
-      lambda_arn           = b.lambda_arn
-      include_body         = b.include_body
-      forward_query_string = b.forward_query_string
+      min_ttl                    = b.min_ttl
+      default_ttl                = b.default_ttl
+      max_ttl                    = b.max_ttl
+      path_pattern               = b.path_pattern
+      target_origin_id           = b.target_origin_id
+      headers                    = b.forwarded_values_headers
+      forward                    = b.cookies_forward
+      event_type                 = b.event_type
+      lambda_arn                 = b.lambda_arn
+      include_body               = b.include_body
+      forward_query_string       = b.forward_query_string
+      response_headers_policy_id = lookup(b, "response_headers_policy_id", null)
     }]
     content {
       allowed_methods = ["GET", "HEAD", "DELETE", "OPTIONS", "PATCH", "POST", "PUT"]
@@ -233,6 +236,8 @@ resource "aws_cloudfront_distribution" "website_cdn" {
       path_pattern           = ordered_cache_behavior.value.path_pattern
       target_origin_id       = ordered_cache_behavior.value.target_origin_id
       viewer_protocol_policy = "redirect-to-https"
+
+      response_headers_policy_id = ordered_cache_behavior.value.response_headers_policy_id
 
       forwarded_values {
         query_string = ordered_cache_behavior.value.forward_query_string
