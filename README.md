@@ -121,6 +121,8 @@ See the [Terraform Modules documentation](https://www.terraform.io/docs/modules/
 * `minimum_client_tls_protocol_version`: (Optional) Set the minimum protocol version of the CloudFront certificate.
   Read the docs on [Supported Protocols and Ciphers](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/secure-connections-supported-viewer-protocols-ciphers.html#secure-connections-supported-ciphers)
   for supported values. Default value = `TLSv1`
+* `web_acl_id`: (Optional) A WAF ACL to associate with the distribution.
+* `response_headers_policy_id`: (Optional) A response headers policy to associate with the default cache behavior.
 
 ### Outputs
 
