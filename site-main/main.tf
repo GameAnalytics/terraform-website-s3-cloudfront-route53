@@ -54,6 +54,40 @@ resource "aws_s3_bucket" "website_bucket" {
   //  }
 
   tags = local.tags
+
+  # The variables listed below all have alternatives in the shape of
+  # additional Terraform resources,
+  # e.g. aws_s3_bucket_lifecycle_configuration.
+  #
+  # In versions below 4.9.0 of the Terraform AWS provider, Terraform's
+  # config drift detection might attempt to remove those values if the
+  # additional resource is being used.  The documentation, e.g.
+  # https://registry.terraform.io/providers/hashicorp/aws/3.75.0/docs/resources/s3_bucket_lifecycle_configuration#usage-notes
+  # recommends adding the following lifecycle rule.
+  #
+  # Version 4.9.0 implicitly applies this lifecycle rule when the
+  # variables are not explicitly set in the aws_s3_bucket resource, so
+  # this section can be removed once we upgrade to that version.  See
+  # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/guides/version-4-upgrade#changes-to-s3-bucket-drift-detection
+  # for details.
+  lifecycle {
+    ignore_changes = [
+      acceleration_status,
+      acl,
+      cors_rule,
+      grant,
+      lifecycle_rule,
+      logging,
+      object_lock_configuration,
+      policy,
+      replication_configuration,
+      request_payer,
+      server_side_encryption_configuration,
+      versioning
+      # website is in use above - don't ignore it
+      #website
+    ]
+  }
 }
 
 ################################################################################################################
