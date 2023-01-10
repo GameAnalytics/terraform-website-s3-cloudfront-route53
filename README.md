@@ -209,7 +209,8 @@ root domain.
   usually pass the `website_cdn_hostname` output variable from the main or redirect site here.
 * `cdn_hosted_zone_id`: the Hosted Zone ID of the CloudFront distribution. You usually pass the
   `website_cdn_zone_id` output variable from the main or redirect site here.
-* `route53_zone_id`: the Route53 Zone ID where the CNAME entry must be created.
+* `route53_zone_id`: the Route53 Zone ID where the alias entry must be created.
+* `ipv6`:  (Optional) Add AAAA record as well as A for the alias. Default value = `false`
 
 ## Users
 
