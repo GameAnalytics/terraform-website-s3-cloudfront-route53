@@ -36,6 +36,11 @@ variable "price_class" {
   default     = "PriceClass_200"
 }
 
+variable "http_version" {
+  type    = string
+  default = "http2"
+}
+
 variable "ipv6" {
   type        = bool
   description = "Enable IPv6 on CloudFront distribution"

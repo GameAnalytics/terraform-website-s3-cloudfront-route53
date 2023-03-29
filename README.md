@@ -116,6 +116,8 @@ See the [Terraform Modules documentation](https://www.terraform.io/docs/modules/
 * `price_class`: (Optional) The price class that corresponds with the maximum price that you want to pay for CloudFront service.
   Read [pricing page](https://aws.amazon.com/cloudfront/pricing/) for more details.
   Options: `PriceClass_100` | `PriceClass_200` | `PriceClass_All`. Default value = `PriceClass_200`
+* `http_version`: (Optional) Maximum HTTP version to support on the distribution.
+  Allowed values are `http1.1`, `http2`, `http2and3` and `http3`. The default is `http2`.
 * `ipv6`:  (Optional) Enable IPv6 support on CloudFront distribution. Default value = `false`
 * `wait-for-deployment`: (Optional) If enabled, the resource will wait for the distribution status to change from `InProgress` to `Deployed`. Setting this to `false` will skip the process. Default: `true`.
 * `minimum_client_tls_protocol_version`: (Optional) Set the minimum protocol version of the CloudFront certificate.

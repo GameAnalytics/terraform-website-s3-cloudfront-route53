@@ -88,7 +88,7 @@ resource "aws_cloudfront_distribution" "website_cdn" {
   enabled         = true
   is_ipv6_enabled = var.ipv6
   price_class     = var.price_class
-  http_version    = "http2"
+  http_version    = var.http_version
 
   origin {
     origin_id   = "origin-bucket-${aws_s3_bucket.website_bucket.id}"

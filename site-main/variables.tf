@@ -88,6 +88,11 @@ variable "price_class" {
   default     = "PriceClass_200"
 }
 
+variable "http_version" {
+  type    = string
+  default = "http2"
+}
+
 variable "default_cache_behavior_lambda_function_associations" {
   description = "Optional Lambda@Edge function associations for the Default Cache Behavior (S3 bucket)"
   default = []
