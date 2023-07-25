@@ -130,6 +130,8 @@ variable "ordered_cache_behaviors" {
     lambda_arn               = string
     include_body             = bool
     forward_query_string     = bool
+
+    response_headers_policy_id = string
   }))
 }
 
