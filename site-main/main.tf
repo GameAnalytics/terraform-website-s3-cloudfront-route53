@@ -39,10 +39,14 @@ data "template_file" "bucket_policy" {
 
 resource "aws_s3_bucket" "website_bucket" {
   bucket        = var.bucket_name
-  policy        = data.template_file.bucket_policy.rendered
   force_destroy = var.force_destroy
 
   tags = local.tags
+}
+
+resource "aws_s3_bucket_policy" "website_bucket" {
+  bucket = aws_s3_bucket.website_bucket.id
+  policy = data.template_file.bucket_policy.rendered
 }
 
 resource "aws_s3_bucket_website_configuration" "website_bucket" {
