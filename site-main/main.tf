@@ -42,18 +42,21 @@ resource "aws_s3_bucket" "website_bucket" {
   policy        = data.template_file.bucket_policy.rendered
   force_destroy = var.force_destroy
 
-  website {
-    index_document = "index.html"
-    error_document = var.error_document
-    routing_rules  = var.routing_rules
+  tags = local.tags
+}
+
+resource "aws_s3_bucket_website_configuration" "website_bucket" {
+  bucket = aws_s3_bucket.website_bucket.id
+
+  index_document {
+    suffix = "index.html"
   }
 
-  //  logging {
-  //    target_bucket = "${var.log_bucket}"
-  //    target_prefix = "${var.log_bucket_prefix}"
-  //  }
+  error_document {
+    key = var.error_document
+  }
 
-  tags = local.tags
+  routing_rules = var.routing_rules
 }
 
 ################################################################################################################
@@ -97,7 +100,7 @@ resource "aws_cloudfront_distribution" "website_cdn" {
 
   origin {
     origin_id   = "origin-bucket-${aws_s3_bucket.website_bucket.id}"
-    domain_name = aws_s3_bucket.website_bucket.website_endpoint
+    domain_name = aws_s3_bucket_website_configuration.website_bucket.website_endpoint
     origin_path = var.bucket_path
 
     custom_origin_config {
