@@ -35,15 +35,19 @@ resource "aws_s3_bucket" "website_bucket" {
   tags = local.tags
 }
 
-resource "aws_s3_bucket_policy" "website_bucket" {
-  bucket = aws_s3_bucket.website_bucket.id
-  policy = templatefile(
+data "aws_iam_policy_document" "website_bucket" {
+  source_policy_documents = flatten([templatefile(
     "${path.module}/website_bucket_policy.json",
     {
       bucket = var.bucket_name
       secret = var.duplicate-content-penalty-secret
     }
-  )
+  ), var.bucket_policy_document != null ? [var.bucket_policy_document] : []])
+}
+
+resource "aws_s3_bucket_policy" "website_bucket" {
+  bucket = aws_s3_bucket.website_bucket.id
+  policy = data.aws_iam_policy_document.website_bucket.json
 }
 
 resource "aws_s3_bucket_website_configuration" "website_bucket" {
@@ -69,7 +73,7 @@ resource "aws_iam_policy" "site_deployer_policy" {
   name        = "${var.bucket_name}.deployer"
   path        = "/"
   description = "Policy allowing to publish a new version of the website to the S3 bucket"
-  policy      = templatefile(
+  policy = templatefile(
     "${path.module}/deployer_role_policy.json",
     {
       bucket = var.bucket_name
