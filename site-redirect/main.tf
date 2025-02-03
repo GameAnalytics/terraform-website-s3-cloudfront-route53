@@ -59,7 +59,7 @@ resource "aws_iam_policy" "site_deployer_policy" {
   name        = "site.${replace(replace(var.domain, ".", "-"), "*", "star")}.deployer"
   path        = "/"
   description = "Policy allowing to publish a new version of the website to the S3 bucket"
-  policy      = templatefile(
+  policy = templatefile(
     "${path.module}/deployer_role_policy.json",
     {
       bucket = "site.${replace(replace(var.domain, ".", "-"), "*", "star")}"
