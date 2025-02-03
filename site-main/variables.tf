@@ -22,6 +22,12 @@ variable "bucket_path" {
   default     = "/"
 }
 
+variable "bucket_policy_document" {
+  type        = string
+  description = "An optional IAM policy document to attach to the S3 bucket"
+  default     = null
+}
+
 variable "duplicate-content-penalty-secret" {
   type = string
 }
@@ -95,10 +101,10 @@ variable "http_version" {
 
 variable "default_cache_behavior_lambda_function_associations" {
   description = "Optional Lambda@Edge function associations for the Default Cache Behavior (S3 bucket)"
-  default = []
+  default     = []
   type = list(object({
-    event_type = string
-    lambda_arn = string
+    event_type   = string
+    lambda_arn   = string
     include_body = bool
   }))
 }
