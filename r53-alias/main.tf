@@ -26,3 +26,15 @@ resource "aws_route53_record" "cdn-alias-aaaa" {
     evaluate_target_health = false
   }
 }
+
+resource "aws_route53_record" "cdn-alias-https" {
+  zone_id = var.route53_zone_id
+  name    = var.domain
+  type    = "HTTPS"
+
+  alias {
+    name                   = var.target
+    zone_id                = var.cdn_hosted_zone_id
+    evaluate_target_health = false
+  }
+}
