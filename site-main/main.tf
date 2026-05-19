@@ -215,6 +215,22 @@ resource "aws_cloudfront_distribution" "website_cdn" {
     }
   }
 
+  dynamic "origin" {
+    for_each = {for o in var.vpc_origins : o.origin_id => {
+      origin_id   = o.origin_id
+      domain_name = o.domain_name
+    }}
+
+    content {
+      origin_id   = origin.value.origin_id
+      domain_name = origin.value.domain_name
+
+      vpc_origin_config {
+        vpc_origin_id = aws_cloudfront_vpc_origin.vpc_origin[origin.value.origin_id].id
+      }
+    }
+  }
+
   dynamic "ordered_cache_behavior" {
     for_each = [for b in var.ordered_cache_behaviors : {
       min_ttl                    = b.min_ttl
@@ -265,4 +281,24 @@ resource "aws_cloudfront_distribution" "website_cdn" {
   }
 
   web_acl_id = var.web_acl_id
+}
+
+resource "aws_cloudfront_vpc_origin" "vpc_origin" {
+  for_each = {for o in var.vpc_origins : o.origin_id => {
+    origin_id = o.origin_id
+    arn       = o.arn
+  }}
+
+  vpc_origin_endpoint_config {
+    name                   = each.value.origin_id
+    arn                    = each.value.arn
+    http_port              = 80
+    https_port             = 443
+    origin_protocol_policy = "https-only"
+
+    origin_ssl_protocols {
+      items    = ["TLSv1.2"]
+      quantity = 1
+    }
+  }
 }
