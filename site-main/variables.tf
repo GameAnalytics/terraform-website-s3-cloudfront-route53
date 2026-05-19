@@ -121,6 +121,16 @@ variable "origins" {
   }))
 }
 
+variable "vpc_origins" {
+  description = "Additional origins, to be served by VPC-internal resources"
+  default     = []
+  type = list(object({
+    origin_id   = string
+    domain_name = string
+    arn         = string
+  }))
+}
+
 variable "ordered_cache_behaviors" {
   description = "Additional routing behaviors"
   default     = []
