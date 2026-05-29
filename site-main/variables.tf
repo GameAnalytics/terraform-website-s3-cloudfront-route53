@@ -139,6 +139,9 @@ variable "ordered_cache_behaviors" {
     forward_query_string     = bool
 
     response_headers_policy_id = string
+
+    cloudfront_function_arn        = optional(string, "")
+    cloudfront_function_event_type = optional(string, "viewer-request")
   }))
 }
 
