@@ -133,9 +133,9 @@ variable "ordered_cache_behaviors" {
     target_origin_id         = string
     forwarded_values_headers = list(string)
     cookies_forward          = string
-    event_type               = string
-    lambda_arn               = string
-    include_body             = bool
+    event_type               = optional(string, "")
+    lambda_arn               = optional(string, "")
+    include_body             = optional(bool, false)
     forward_query_string     = bool
 
     response_headers_policy_id = string
