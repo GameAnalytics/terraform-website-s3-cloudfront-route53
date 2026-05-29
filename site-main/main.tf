@@ -191,6 +191,7 @@ resource "aws_cloudfront_distribution" "website_cdn" {
       origin_path                      = o.origin_path
       origin_protocol_policy           = o.origin_protocol_policy
       duplicate_content_penalty_secret = o.duplicate_content_penalty_secret
+      ip_address_type                  = o.ip_address_type
     }]
     content {
       origin_id   = origin.value.origin_id
@@ -202,6 +203,7 @@ resource "aws_cloudfront_distribution" "website_cdn" {
         http_port              = "80"
         https_port             = "443"
         origin_ssl_protocols   = ["TLSv1", "TLSv1.1", "TLSv1.2"]
+        ip_address_type        = origin.value.ip_address_type
       }
 
       dynamic "custom_header" {
@@ -217,18 +219,20 @@ resource "aws_cloudfront_distribution" "website_cdn" {
 
   dynamic "ordered_cache_behavior" {
     for_each = [for b in var.ordered_cache_behaviors : {
-      min_ttl                    = b.min_ttl
-      default_ttl                = b.default_ttl
-      max_ttl                    = b.max_ttl
-      path_pattern               = b.path_pattern
-      target_origin_id           = b.target_origin_id
-      headers                    = b.forwarded_values_headers
-      forward                    = b.cookies_forward
-      event_type                 = b.event_type
-      lambda_arn                 = b.lambda_arn
-      include_body               = b.include_body
-      forward_query_string       = b.forward_query_string
-      response_headers_policy_id = lookup(b, "response_headers_policy_id", null)
+      min_ttl                        = b.min_ttl
+      default_ttl                    = b.default_ttl
+      max_ttl                        = b.max_ttl
+      path_pattern                   = b.path_pattern
+      target_origin_id               = b.target_origin_id
+      headers                        = b.forwarded_values_headers
+      forward                        = b.cookies_forward
+      event_type                     = b.event_type
+      lambda_arn                     = b.lambda_arn
+      include_body                   = b.include_body
+      forward_query_string           = b.forward_query_string
+      response_headers_policy_id     = lookup(b, "response_headers_policy_id", null)
+      cloudfront_function_arn        = b.cloudfront_function_arn
+      cloudfront_function_event_type = b.cloudfront_function_event_type
     }]
     content {
       allowed_methods = ["GET", "HEAD", "DELETE", "OPTIONS", "PATCH", "POST", "PUT"]
@@ -259,6 +263,15 @@ resource "aws_cloudfront_distribution" "website_cdn" {
           event_type   = ordered_cache_behavior.value.event_type
           lambda_arn   = ordered_cache_behavior.value.lambda_arn
           include_body = ordered_cache_behavior.value.include_body
+        }
+      }
+
+      dynamic "function_association" {
+        for_each = ordered_cache_behavior.value.cloudfront_function_arn != "" ? ["present"] : []
+
+        content {
+          event_type   = ordered_cache_behavior.value.cloudfront_function_event_type
+          function_arn = ordered_cache_behavior.value.cloudfront_function_arn
         }
       }
     }

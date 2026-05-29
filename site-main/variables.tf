@@ -118,6 +118,7 @@ variable "origins" {
     origin_path                      = string
     origin_protocol_policy           = string
     duplicate_content_penalty_secret = string
+    ip_address_type                  = optional(string, "ipv4")
   }))
 }
 
@@ -138,6 +139,9 @@ variable "ordered_cache_behaviors" {
     forward_query_string     = bool
 
     response_headers_policy_id = string
+
+    cloudfront_function_arn        = optional(string, "")
+    cloudfront_function_event_type = optional(string, "viewer-request")
   }))
 }
 
