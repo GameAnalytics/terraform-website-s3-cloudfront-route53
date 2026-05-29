@@ -191,6 +191,7 @@ resource "aws_cloudfront_distribution" "website_cdn" {
       origin_path                      = o.origin_path
       origin_protocol_policy           = o.origin_protocol_policy
       duplicate_content_penalty_secret = o.duplicate_content_penalty_secret
+      ip_address_type                  = o.ip_address_type
     }]
     content {
       origin_id   = origin.value.origin_id
@@ -202,6 +203,7 @@ resource "aws_cloudfront_distribution" "website_cdn" {
         http_port              = "80"
         https_port             = "443"
         origin_ssl_protocols   = ["TLSv1", "TLSv1.1", "TLSv1.2"]
+        ip_address_type        = origin.value.ip_address_type
       }
 
       dynamic "custom_header" {

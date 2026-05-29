@@ -118,6 +118,7 @@ variable "origins" {
     origin_path                      = string
     origin_protocol_policy           = string
     duplicate_content_penalty_secret = string
+    ip_address_type                  = optional(string, "ipv4")
   }))
 }
 
